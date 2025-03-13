@@ -17,4 +17,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Trilhas.unity
     guid: f87d156d9fb69b74fa4c71396d1531ae
+  - enabled: 1
+    path: Assets/Scenes/Niveis.unity
+    guid: b6736dcbc99393947b335359c4be8475
+  - enabled: 1
+    path: Assets/Scenes/Configuracao.unity
+    guid: 47beab432100b4444b4889347561cb6b
   m_configObjects: {}

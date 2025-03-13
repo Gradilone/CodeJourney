@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class scrTransicao : MonoBehaviour
 {
-    public int sceneIndex; // Índice da cena a ser carregada
+    public int sceneIndex; 
 
     public void LoadSceneByIndex()
     {
