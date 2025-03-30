@@ -1672,7 +1672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3294bb952c8f8d84e82dee5f3bc2b376, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneIndex: 3
+  sceneIndex: 4
 --- !u!1 &774716797
 GameObject:
   m_ObjectHideFlags: 0
@@ -2397,7 +2397,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 720648896}
         m_TargetAssemblyTypeName: scrTransicao, Assembly-CSharp
-        m_MethodName: LoadLastScene
+        m_MethodName: LoadSceneByIndex
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
