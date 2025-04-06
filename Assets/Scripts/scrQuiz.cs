@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -10,10 +11,15 @@ public class scrQuiz : MonoBehaviour
     public TextMeshProUGUI perguntaText;
     public GameObject[] opcoes;
     public int questaoAtual = 0;
-    public scrRespostas respostas;
+    private bool[] perguntasRespondidas;
+    public float velocidadeDigitacao = 0.05f;
+
+    private Coroutine animacaoPergunta;
+
 
     private void Start()
-    { 
+    {
+        perguntasRespondidas = new bool[perguntas.Length];
         if (perguntas.Length > 0)
         {
             SetQuestion();
@@ -22,8 +28,21 @@ public class scrQuiz : MonoBehaviour
 
     public void SetQuestion()
     {
-        perguntaText.text = perguntas[questaoAtual].pergunta;
+        if (animacaoPergunta != null)
+            StopCoroutine(animacaoPergunta);
+
+        animacaoPergunta = StartCoroutine(AnimarPergunta(perguntas[questaoAtual].pergunta));
         SetAnswers();
+    }
+
+    IEnumerator AnimarPergunta(string texto)
+    {
+        perguntaText.text = "";
+        foreach (char letra in texto.ToCharArray())
+        {
+            perguntaText.text += letra;
+            yield return new WaitForSeconds(velocidadeDigitacao);
+        }
     }
     public void SetAnswers()
     {
@@ -36,9 +55,50 @@ public class scrQuiz : MonoBehaviour
         }
     }
 
+    private int ObterIndiceAleatorio()
+    {
+        List<int> indicesDisponiveis = new List<int>();
+        for (int i = 0; i < perguntas.Length; i++)
+        {
+            if (!perguntasRespondidas[i])
+            {
+                indicesDisponiveis.Add(i);
+            }
+        }
+
+        if (indicesDisponiveis.Count == 0)
+            return -1;
+
+        int indiceAleatorio = UnityEngine.Random.Range(0, indicesDisponiveis.Count);
+        return indicesDisponiveis[indiceAleatorio];
+    }
+
     public void Correto()
     {
-        SetQuestion();
+        StartCoroutine(ExecutarCorretoComDelay());
+    }
+    private IEnumerator ExecutarCorretoComDelay()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        // Marca a pergunta atual como respondida
+        perguntasRespondidas[questaoAtual] = true;
+        int novoIndice = ObterIndiceAleatorio();
+
+        if (novoIndice != -1)
+        {
+            questaoAtual = novoIndice;
+            SetQuestion();
+        }
+        else
+        {
+            // Todas as perguntas foram respondidas.
+            perguntaText.text = "Parabéns! Você concluiu.";
+            foreach (GameObject opcao in opcoes)
+            {
+                opcao.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
+            }
+        }
     }
 
 }
