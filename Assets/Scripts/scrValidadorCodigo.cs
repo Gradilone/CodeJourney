@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class scrValidadorCodigo : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class scrValidadorCodigo : MonoBehaviour
     private List<GameObject> feedbacksInstanciados = new List<GameObject>();
     private List<Color> coresOriginais = new List<Color>();
 
+    public RectTransform painelFinal;
+    public Vector2 posicaoInicial = new Vector2(0, -500);
+    public Vector2 posicaoFinal = new Vector2(0, 0);
+    public float duracaoAnimacao = 1f;
+
     void Start()
     {
         foreach (var input in lacunas)
@@ -36,6 +42,7 @@ public class scrValidadorCodigo : MonoBehaviour
 
     public void VerificarRespostas()
     {
+        bool todasCorretas = true;
         LimparFeedbacksAtuais();
 
         for (int i = 0; i < lacunas.Count && i < respostasCorretas.Count; i++)
@@ -81,8 +88,19 @@ public class scrValidadorCodigo : MonoBehaviour
                 input.interactable = false;
             }
 
-            
+            if (lacunas[i].interactable)
+            {
+                todasCorretas = false;
+            }
+
         }
+
+        if (todasCorretas)
+        {
+            SubirPainel();
+        }
+
+
     }
 
     public void LimparFeedback(TMP_InputField input)
@@ -144,5 +162,25 @@ public class scrValidadorCodigo : MonoBehaviour
         }
 
         Destroy(obj);
+    }
+
+    public void SubirPainel()
+    {
+        StartCoroutine(AnimarPainel());
+    }
+
+    private IEnumerator AnimarPainel()
+    {
+        float tempoDecorrido = 0f;
+
+        while (tempoDecorrido < duracaoAnimacao)
+        {
+            tempoDecorrido += Time.deltaTime;
+            float t = Mathf.Clamp01(tempoDecorrido / duracaoAnimacao);
+            painelFinal.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoFinal, t);
+            yield return null;
+        }
+
+        painelFinal.anchoredPosition = posicaoFinal;
     }
 }
