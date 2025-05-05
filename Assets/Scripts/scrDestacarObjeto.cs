@@ -6,20 +6,42 @@ public class scrDestacarObjeto : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject objetoSelecionado;
-    private GameObject contorno;
+    private GameObject ultimoSelecionado;
+
+    // Lista pública de todos os objetos que já foram selecionados
+    public List<GameObject> historicoSelecionados = new List<GameObject>();
+
 
 
     void Start()
     {
         GameObject objetoInicial = GameObject.Find("Inicio");
         SelecionarObjeto(objetoInicial);
+        ultimoSelecionado = null;
     }
 
     void Update()
     {
-        if (objetoSelecionado != null)
+        if (objetoSelecionado != ultimoSelecionado)
         {
-            DestacarSelecionado(objetoSelecionado);
+            // Remover destaque do antigo
+            if (ultimoSelecionado != null)
+            {
+                RemoverDestaque(ultimoSelecionado);
+            }
+
+            // Adicionar destaque ao novo
+            if (objetoSelecionado != null)
+            {
+                DestacarSelecionado(objetoSelecionado);
+                if (!historicoSelecionados.Contains(objetoSelecionado))
+                {
+                    historicoSelecionados.Add(objetoSelecionado);
+                }
+            }
+
+            // Atualizar referência
+            ultimoSelecionado = objetoSelecionado;
         }
 
     }
@@ -43,43 +65,31 @@ public class scrDestacarObjeto : MonoBehaviour
     // Destacar o objeto selecionado com um contorno
     void DestacarSelecionado(GameObject alvo)
     {
-        if (contorno != null)
-            Destroy(contorno);
-
-        // Obtém o SpriteRenderer do objeto alvo
-        SpriteRenderer sr = alvo.GetComponent<SpriteRenderer>();
-
-        if (sr == null)
+        if (alvo.transform.childCount > 0)
         {
-            Debug.LogWarning("Objeto não tem SpriteRenderer!");
-            return;
+            Transform filho = alvo.transform.GetChild(0);
+            SpriteRenderer srFilho = filho.GetComponent<SpriteRenderer>();
+
+            if (srFilho != null)
+            {
+                srFilho.enabled = true;
+            }
         }
-
-        // Cria um novo GameObject para o contorno
-        contorno = new GameObject("Contorno");
-        contorno.transform.SetParent(alvo.transform);
-        contorno.transform.localPosition = Vector3.zero;
-        contorno.transform.localScale = Vector3.one * 1.1f; // Ligeiramente maior que o objeto original
-
-        // Adiciona um SpriteRenderer para o contorno
-        SpriteRenderer srContorno = contorno.AddComponent<SpriteRenderer>();
-        srContorno.sprite = sr.sprite;
-        srContorno.sortingLayerID = sr.sortingLayerID;
-
-        // Define um sortingOrder fixo para o contorno, por exemplo, 0
-        srContorno.sortingOrder = 0; // Valor fixo, o contorno ficará atrás do objeto original
-        srContorno.color = Color.red; // Define a cor do contorno como amarela
     }
 
-    // Remover o destaque (contorno) do objeto
     void RemoverDestaque(GameObject alvo)
     {
-        if (alvo != null && alvo.transform.Find("Contorno"))
+        if (alvo.transform.childCount > 0)
         {
-            Destroy(alvo.transform.Find("Contorno").gameObject);
+            Transform filho = alvo.transform.GetChild(0);
+            SpriteRenderer srFilho = filho.GetComponent<SpriteRenderer>();
+
+            if (srFilho != null)
+            {
+                srFilho.enabled = false;
+            }
         }
     }
-
     public GameObject GetObjetoSelecionado()
     {
         return objetoSelecionado;

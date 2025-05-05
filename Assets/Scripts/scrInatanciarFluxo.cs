@@ -19,11 +19,13 @@ public class scrInatanciarFluxo : MonoBehaviour
     private GameObject prefabInstanciado;
 
     public scrDestacarObjeto destacador;
+    public scrManager manager;
 
     public int maxUso = 2; // Quantidade máxima de vezes que o botão pode ser usado
-    private int vezesUsado = 0; // Contador de vezes que o botão foi usado
+    public int vezesUsado = 0; // Contador de vezes que o botão foi usado
 
     public Button meuBotao; // Referência ao botão
+
 
     [Header("Textos para cada instância")]
     public List<string> textosInstancia;
@@ -62,6 +64,9 @@ public class scrInatanciarFluxo : MonoBehaviour
         }
 
         destacador.objetoSelecionado = prefabInstanciado;
+        manager.instanciados++;
+
+        DesenharLinhaVertical(destacador.objetoSelecionado.transform.position, prefabInstanciado.transform.position);
 
         vezesUsado++;
 
@@ -69,6 +74,26 @@ public class scrInatanciarFluxo : MonoBehaviour
         {
             meuBotao.interactable = false; 
         }
+
+
+    }
+
+    private void DesenharLinhaVertical(Vector3 pontoA, Vector3 pontoB)
+    {
+        if (linhaRaycast == null)
+        {
+            Debug.LogWarning("LineRenderer não atribuído!");
+            return;
+        }
+
+        linhaRaycast.startWidth = 0.05f;
+        linhaRaycast.endWidth = 0.05f;
+        linhaRaycast.sortingOrder = 10;
+
+        linhaRaycast.positionCount = 2;
+        linhaRaycast.SetPosition(1, pontoA);
+        linhaRaycast.SetPosition(1, pontoB);
+
 
     }
 
