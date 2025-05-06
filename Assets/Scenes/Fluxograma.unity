@@ -470,7 +470,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 229510591}
   m_OnClick:
     m_PersistentCalls:
@@ -690,6 +690,18 @@ MonoBehaviour:
   mainCamera: {fileID: 1568704662}
   objetoSelecionado: {fileID: 0}
   historicoSelecionados: []
+  lineRenderer: {fileID: 146793191}
+  inicio: {fileID: 979336696}
+  sequenciaEsperada:
+  - I
+  - D1
+  - E1
+  - L1
+  - E2
+  - L2
+  - A1
+  - E3
+  - F0
 --- !u!4 &345155211
 Transform:
   m_ObjectHideFlags: 0
@@ -716,14 +728,14 @@ PrefabInstance:
     - target: {fileID: 1372609819012315513, guid: 2b155946407052e479d06e31fe193e8f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 345155210}
     - target: {fileID: 1372609819012315513, guid: 2b155946407052e479d06e31fe193e8f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: VerificarRespostas
+      value: VerificarSequencia
       objectReference: {fileID: 0}
     - target: {fileID: 1372609819012315513, guid: 2b155946407052e479d06e31fe193e8f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: scrValidadorCodigo, Assembly-CSharp
+      value: scrDestacarObjeto, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 1372609819012315513, guid: 2b155946407052e479d06e31fe193e8f, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -3253,6 +3265,7 @@ GameObject:
   - component: {fileID: 1399449440}
   - component: {fileID: 1399449439}
   - component: {fileID: 1399449441}
+  - component: {fileID: 1399449442}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -3274,8 +3287,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   instanciados: 0
   qtdTotal: 8
-  qtdTotalParaFim: 7
-  botaoFim: {fileID: 229510590}
   botaoConfirmar: {fileID: 361196888}
 --- !u!4 &1399449440
 Transform:
@@ -3304,7 +3315,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dadccc52a449f44c9dd79d3f51ad743, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inicio: {fileID: 979336696}
   destacador: {fileID: 345155210}
+  manager: {fileID: 1399449439}
+  ler: {fileID: 1266603204}
+  exibir: {fileID: 2030734954}
+  atribuir: {fileID: 669175174}
+  declarar: {fileID: 1595638845}
+--- !u!114 &1399449442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399449438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1c2efb7fd187374d983f2f8aed4e96d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instanciador: {fileID: 0}
+  textoUI: {fileID: 0}
 --- !u!1 &1401961476
 GameObject:
   m_ObjectHideFlags: 0
@@ -4864,7 +4895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 1568704662}
-  prefabParaInstanciar: {fileID: 3768273392700235744, guid: 64c5403303cabad49aa693a6fcbc20d0, type: 3}
+  prefabParaInstanciar: {fileID: 3768273392700235744, guid: 7edc948c00bdd1f40bacbc0285092f5c, type: 3}
   linhaRaycast: {fileID: 146793191}
   canvasWorldSpace: {fileID: 1914952148}
   textoPrefabUI: {fileID: 768404158001155285, guid: 5ab96a27c7fff9641a46e281166a6f30, type: 3}

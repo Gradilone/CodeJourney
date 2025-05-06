@@ -30,8 +30,23 @@ public class scrInatanciarFluxo : MonoBehaviour
     [Header("Textos para cada instância")]
     public List<string> textosInstancia;
 
+    private void Update()
+    {
+        if (vezesUsado >= maxUso)
+        {
+            meuBotao.interactable = false;
+        }
+        else
+        {
+            meuBotao.interactable = true;
+        }
+
+    }
+
+
     public void InstanciarPrefab()
     {
+
         if (destacador == null || destacador.objetoSelecionado == null)
         {
             Debug.LogWarning("Nenhum objeto selecionado!");
@@ -41,6 +56,9 @@ public class scrInatanciarFluxo : MonoBehaviour
         Vector3 posicaoInstanciada = destacador.objetoSelecionado.transform.position + Vector3.down * distanciaParaInstanciar;
 
         prefabInstanciado = Instantiate(prefabParaInstanciar, posicaoInstanciada, Quaternion.identity);
+        srcIdentificadorInstanciador marcador = prefabInstanciado.AddComponent<srcIdentificadorInstanciador>();
+        marcador.instanciador = this;
+
 
         string texto = textosInstancia[vezesUsado];
         float escalaPorCaractere = 0.09f; // Ajuste esse valor conforme o modelo
@@ -63,39 +81,16 @@ public class scrInatanciarFluxo : MonoBehaviour
             tmp.text = texto;
         }
 
+        marcador.textoUI = textoInstanciado;
+
         destacador.objetoSelecionado = prefabInstanciado;
         manager.instanciados++;
 
-        DesenharLinhaVertical(destacador.objetoSelecionado.transform.position, prefabInstanciado.transform.position);
 
         vezesUsado++;
 
-        if (vezesUsado >= maxUso)
-        {
-            meuBotao.interactable = false; 
-        }
-
-
     }
 
-    private void DesenharLinhaVertical(Vector3 pontoA, Vector3 pontoB)
-    {
-        if (linhaRaycast == null)
-        {
-            Debug.LogWarning("LineRenderer não atribuído!");
-            return;
-        }
-
-        linhaRaycast.startWidth = 0.05f;
-        linhaRaycast.endWidth = 0.05f;
-        linhaRaycast.sortingOrder = 10;
-
-        linhaRaycast.positionCount = 2;
-        linhaRaycast.SetPosition(1, pontoA);
-        linhaRaycast.SetPosition(1, pontoB);
-
-
-    }
 
     void OnDrawGizmos()
     {
