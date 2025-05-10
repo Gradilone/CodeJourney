@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class scrDestacarObjeto : MonoBehaviour
 {
     public Camera mainCamera;
     public GameObject objetoSelecionado;
     private GameObject ultimoSelecionado;
+
+    public scrRemoveObjeto remove;
 
     // Lista pública de todos os objetos que já foram selecionados
     public List<GameObject> historicoSelecionados = new List<GameObject>();
@@ -21,12 +25,20 @@ public class scrDestacarObjeto : MonoBehaviour
     public int contadorExibir = 0;
     public int Fim = 0;
 
-    // Dicionário opcional se quiser rastrear identificadores
-    public Dictionary<GameObject, string> identificadores = new Dictionary<GameObject, string>();
-
     public string[] sequenciaEsperada;
 
+    public TextMeshProUGUI textoVerifica;
 
+    public TextMeshProUGUI textoVitoria;
+
+
+    public scrPainelDeslisante painelDeslizante;
+
+    public scrPainelDeslisante painelVitoria;
+
+    public scrPainelDeslisante painelTransicao;
+
+    public int proximaCenaIndex;
 
 
     void Start()
@@ -59,41 +71,8 @@ public class scrDestacarObjeto : MonoBehaviour
                 if (!historicoSelecionados.Contains(objetoSelecionado))
                 {
                     historicoSelecionados.Add(objetoSelecionado);
-
-                    string identificador = "";
-
-                    switch (objetoSelecionado.tag)
-                    {
-                        case "Ler":
-                            contadorLer++;
-                            identificador = "L" + contadorLer;
-                            break;
-                        case "Declarar":
-                            contadorDeclarar++;
-                            identificador = "D" + contadorDeclarar;
-                            break;
-                        case "Atribuir":
-                            contadorAtribuir++;
-                            identificador = "A" + contadorAtribuir;
-                            break;
-                        case "Exibir":
-                            contadorExibir++;
-                            identificador = "E" + contadorExibir;
-                            break;
-                        case "Fim":;
-                            identificador = "F" + Fim;
-                            break;
-                        default:
-                            identificador = "I";
-                            break;
-                    }
-
-                    identificadores[objetoSelecionado] = identificador;
-
-                    // Opcional: você pode exibir no nome ou em um texto do objeto
-                    objetoSelecionado.name = identificador; // ou use TMP para mostrar na UI
-
                 }
+                    
 
                 if (inicio != null && objetoSelecionado != null)
                 {
@@ -155,38 +134,33 @@ public class scrDestacarObjeto : MonoBehaviour
     }
     public void VerificarSequencia()
     {
+        bool sequenciaCorreta = true;
 
         for (int i = 0; i < sequenciaEsperada.Length; i++)
         {
             if (i >= historicoSelecionados.Count)
             {
                 Debug.Log($"Esperado: {sequenciaEsperada[i]} | Obtido: NULO - Faltando objeto na posição {i}");
+                sequenciaCorreta = false;
                 continue;
             }
 
             GameObject obj = historicoSelecionados[i];
+            string nomeObjeto = obj.name;
 
-            if (identificadores.ContainsKey(obj))
+            if (nomeObjeto == "I") // Se for um identificador ignorado
+                continue;
+
+            if (nomeObjeto == sequenciaEsperada[i])
             {
-                string identificador = identificadores[obj];
-
-                if (identificador == "I")
-                    continue;
-
-                if (identificador == sequenciaEsperada[i])
-                {
-                    Debug.Log($"CORRETO - Esperado: {sequenciaEsperada[i]} | Obtido: {identificador}");
-                    PintarOutline(obj, Color.green);
-                }
-                else
-                {
-                    Debug.LogWarning($"INCORRETO - Esperado: {sequenciaEsperada[i]} | Obtido: {identificador}");
-                    PintarOutline(obj, Color.red);
-                }
+                Debug.Log($"CORRETO - Esperado: {sequenciaEsperada[i]} | Obtido: {nomeObjeto}");
+                PintarOutline(obj, Color.green);
             }
             else
             {
-                Debug.LogError($"Objeto na posição {i} não tem identificador registrado.");
+                Debug.LogWarning($"INCORRETO - Esperado: {sequenciaEsperada[i]} | Obtido: {nomeObjeto}");
+                sequenciaCorreta = false;
+                PintarOutline(obj, Color.red);
             }
         }
 
@@ -195,16 +169,44 @@ public class scrDestacarObjeto : MonoBehaviour
             Debug.LogWarning("Existem objetos extras na sequência selecionada:");
             for (int i = sequenciaEsperada.Length; i < historicoSelecionados.Count; i++)
             {
-                if (identificadores.ContainsKey(historicoSelecionados[i]))
-                {
-                    Debug.LogWarning($"Extra: {identificadores[historicoSelecionados[i]]}");
-                }
-                else
-                {
-                    Debug.LogWarning($"Extra sem identificador: {historicoSelecionados[i].name}");
-                }
+                GameObject obj = historicoSelecionados[i];
+                Debug.LogWarning($"Extra: {obj.name}");
             }
         }
+
+        if (sequenciaCorreta)
+        {
+            painelVitoria.aberto = true;
+            if (textoVitoria != null)
+            {
+               textoVitoria.text = "Parabéns! Você conseguiu!";
+                StartCoroutine(ExecutarDepoisDeDoisSegundos());
+
+
+
+
+
+
+            }
+        }
+        else
+        {
+            painelDeslizante.aberto = true;
+            if (textoVerifica != null)
+            {
+                textoVerifica.text = "Corrija as peças nas posições erradas indicadas pelo contorno vermelho. Aperte o botão de voltar peça para fazer isso";
+            }
+        }
+
+
+    }
+
+    IEnumerator ExecutarDepoisDeDoisSegundos()
+    {
+        yield return new WaitForSeconds(2f);
+        Invoke("CarregarProximaCena", 1.5f);
+
+        painelTransicao.aberto = true;
     }
 
     void PintarOutline(GameObject obj, Color cor)
@@ -220,5 +222,59 @@ public class scrDestacarObjeto : MonoBehaviour
                 sr.color = cor;
             }
         }
+    }
+
+    public void AtribuirIdentificadores()
+    {
+        contadorLer = 0;
+        contadorDeclarar = 0;
+        contadorAtribuir = 0;
+        contadorExibir = 0;
+        foreach (GameObject obj in historicoSelecionados)
+        {
+            AtribuirIdentificador(obj);
+        }
+
+        VerificarSequencia();
+    }
+
+    public void AtribuirIdentificador(GameObject objeto)
+    {
+        string identificador = "";
+
+
+        switch (objeto.tag)
+        {
+            case "Ler":
+                contadorLer++;
+                identificador = "L" + contadorLer;
+                break;
+            case "Declarar":
+                contadorDeclarar++;
+                identificador = "D" + contadorDeclarar;
+                break;
+            case "Atribuir":
+                contadorAtribuir++;
+                identificador = "A" + contadorAtribuir;
+                break;
+            case "Exibir":
+                contadorExibir++;
+                identificador = "E" + contadorExibir;
+                break;
+            case "Fim":
+                identificador = "F" + Fim;
+                break;
+            default:
+                identificador = "I";
+                break;
+        }
+
+        objeto.name = identificador;
+    }
+
+    void CarregarProximaCena()
+    {
+        SceneManager.LoadScene(proximaCenaIndex);
+        
     }
 }

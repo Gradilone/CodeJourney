@@ -26,4 +26,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Quiz.unity
     guid: d1dbeeeccabc02949a6d987ad750f56d
+  - enabled: 1
+    path: Assets/Scenes/Fluxograma.unity
+    guid: 6d1627b33c1f3ad468893b7582800a2f
+  - enabled: 1
+    path: Assets/Scenes/Codigo.unity
+    guid: 385cbe0c683d5224db83cd6c958a6ffe
   m_configObjects: {}

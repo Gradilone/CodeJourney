@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class scrQuiz : MonoBehaviour
 {
@@ -15,6 +16,10 @@ public class scrQuiz : MonoBehaviour
     public float velocidadeDigitacao = 0.05f;
 
     private Coroutine animacaoPergunta;
+
+    public int proximaCenaIndex;
+
+    public scrPainelDeslisante painelTransicao;
 
 
     private void Start()
@@ -98,7 +103,22 @@ public class scrQuiz : MonoBehaviour
             {
                 opcao.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
             }
+
+            StartCoroutine(ExecutarDepoisDeDoisSegundos());
         }
+    }
+
+    IEnumerator ExecutarDepoisDeDoisSegundos()
+    {
+        yield return new WaitForSeconds(2f);
+        Invoke("CarregarProximaCena", 1.5f);
+
+        painelTransicao.aberto = true;
+    }
+
+    void CarregarProximaCena()
+    {
+        SceneManager.LoadScene(proximaCenaIndex);
     }
 
 }
