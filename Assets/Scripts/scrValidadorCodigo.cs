@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class scrValidadorCodigo : MonoBehaviour
 {
@@ -28,6 +27,20 @@ public class scrValidadorCodigo : MonoBehaviour
     public Vector2 posicaoInicial = new Vector2(0, -500);
     public Vector2 posicaoFinal = new Vector2(0, 0);
     public float duracaoAnimacao = 1f;
+
+    public GameObject imgEstrelaAcesa1;
+    public GameObject imgEstrelaAcesa2;
+    public GameObject imgEstrelaAcesa3;
+
+    public TextMeshProUGUI txtProgressoAdicionado;
+    public TextMeshProUGUI txtNivel;
+    public GameObject txtNovoNivel;
+
+    public int progressoGanho;
+    public int progressoAtual;
+    public int progressoAntes;
+
+    public Slider sliderProgresso;
 
     void Start()
     {
@@ -81,6 +94,7 @@ public class scrValidadorCodigo : MonoBehaviour
             if (!correto)
             {
                 Debug.Log($"Resposta incorreta na lacuna {i + 1}. Digitado: '{respostaDigitada}', Esperado: '{respostaEsperada}'");
+                
             }
             else
             {
@@ -97,7 +111,16 @@ public class scrValidadorCodigo : MonoBehaviour
 
         if (todasCorretas)
         {
+            scrGerenciaFase.instance.CalcularEstrelas();
+            int estrelas = scrGerenciaFase.instance.estrelasDaFase;
+
+            // Agora você pode usar esse valor para mostrar a pontuação ou salvar
+            Debug.Log("Estrelas recebidas: " + estrelas);
             SubirPainel();
+        }
+        else
+        {
+            scrGerenciaFase.instance.errosDaFase++;
         }
 
 
@@ -166,6 +189,8 @@ public class scrValidadorCodigo : MonoBehaviour
 
     public void SubirPainel()
     {
+        AtualizarEstrelasUI();
+        AtualizarProgresso();
         StartCoroutine(AnimarPainel());
     }
 
@@ -182,5 +207,49 @@ public class scrValidadorCodigo : MonoBehaviour
         }
 
         painelFinal.anchoredPosition = posicaoFinal;
+    }
+
+    public void AtualizarEstrelasUI()
+    {
+        int estrelas = scrGerenciaFase.instance.estrelasDaFase;
+
+        // Desativa tudo primeiro
+        imgEstrelaAcesa1.SetActive(false);
+        imgEstrelaAcesa2.SetActive(false);
+        imgEstrelaAcesa3.SetActive(false);
+
+        // Ativa conforme a quantidade de estrelas
+        if (estrelas >= 1)
+            imgEstrelaAcesa1.SetActive(true);
+        if (estrelas >= 2)
+            imgEstrelaAcesa2.SetActive(true);
+        if (estrelas >= 3)
+            imgEstrelaAcesa3.SetActive(true);
+    }
+
+    public void AtualizarProgresso()
+    {
+        progressoAntes = scrGerenciaFase.instance.progresso;
+
+        scrGerenciaFase.instance.AdicionarProgresso();
+
+        int progressoGanho = scrGerenciaFase.instance.progressoAdicionado;
+        int progressoAtual = scrGerenciaFase.instance.progresso;
+
+        txtProgressoAdicionado.text = $"+{progressoGanho} EXP";
+        sliderProgresso.value = progressoAtual;
+
+        // Se o progresso anterior somado ao ganho ultrapassar 100, sobe de nível
+        if (progressoAntes + progressoGanho >= 100)
+        {
+            scrGerenciaFase.instance.nivelJogador++;
+            txtNivel.text = "Nível " + scrGerenciaFase.instance.nivelJogador;
+            txtNovoNivel.SetActive(true);
+        }
+        else
+        {
+            txtNivel.text = "Nível " + scrGerenciaFase.instance.nivelJogador;
+            txtNovoNivel.SetActive(false);
+        }
     }
 }

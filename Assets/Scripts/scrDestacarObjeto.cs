@@ -191,6 +191,7 @@ public class scrDestacarObjeto : MonoBehaviour
         }
         else
         {
+            scrGerenciaFase.instance.errosDaFase++;
             painelDeslizante.aberto = true;
             if (textoVerifica != null)
             {

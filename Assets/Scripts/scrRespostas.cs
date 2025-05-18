@@ -23,6 +23,7 @@ public class scrRespostas : MonoBehaviour
         {
             Debug.Log("Errou!");
             StartCoroutine(ShowFeedback(erroImagem));
+            scrGerenciaFase.instance.errosDaFase++;
         }
     }
 
