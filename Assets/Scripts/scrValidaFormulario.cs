@@ -32,9 +32,11 @@ public class scrValidaFormulario : MonoBehaviour
 
     public int sceneIndex;
 
+    public scrConexaoAPI conexaoAPI;
 
     void Start()
     {
+        conexaoAPI = GetComponent<scrConexaoAPI>();
         btnLogin.onClick.AddListener(ValidarFormulario);
 
         tabOrder = new List<Selectable> {
@@ -166,16 +168,58 @@ public class scrValidaFormulario : MonoBehaviour
         if (valido)
         {
             Debug.Log("Formulário válido!");
-            MostrarTooltip(tooltipConfirmacao, "Conta cadastrada com sucesso!");
-            StartCoroutine(TrocarCenaAposDelay(1.5f, sceneIndex));
+
+
+            scrConexaoAPI.CadastroData dados = new scrConexaoAPI.CadastroData
+            {
+                nome = inpNome.text,
+                userName = inpUsuario.text,
+                email = inpEmail.text,
+                dataNascimento = $"{inpAno.text}-{inpMes.text.PadLeft(2, '0')}-{inpDia.text.PadLeft(2, '0')}",
+                senha = inpSenha.text,
+            };
+
+            Debug.Log("Preparando para enviar cadastro via API...");
+            StartCoroutine(conexaoAPI.EnviarCadastro(dados,
+                onSuccess: (resposta) => {
+                    Debug.Log("Cadastro efetuado com sucesso! Resposta: " + resposta);
+                    MostrarTooltip(tooltipConfirmacao, "Conta cadastrada com sucesso!", Color.green);
+                    StartCoroutine(TrocarCenaAposDelay(1.5f, sceneIndex));
+                },
+                onError: (statusCode, erro) => {
+                    if (statusCode == 400)
+                    {
+                        MostrarTooltip(tooltipConfirmacao, "Já existe um usuário com essas credenciais");
+                    }
+                    else
+                    {
+                        MostrarTooltip(tooltipConfirmacao, "Erro no login: " + erro);
+                    }
+                }
+            ));
+           
 
         }
     }
 
-    void MostrarTooltip(GameObject tooltip, string mensagem)
+    void MostrarTooltip(GameObject tooltip, string mensagem, Color? cor = null)
     {
         tooltip.SetActive(true);
-        tooltip.GetComponentInChildren<TextMeshProUGUI>().text = mensagem;
+
+        var texto = tooltip.GetComponentInChildren<TextMeshProUGUI>();
+
+        texto.text = mensagem;
+
+        if (cor.HasValue)
+        {
+            texto.color = cor.Value;
+        }
+        else
+        {
+            Color corPadrao;
+            ColorUtility.TryParseHtmlString("#FF7E0A", out corPadrao);
+            texto.color = corPadrao;
+        }
     }
 
     void OcultarTodosOsTooltips()
