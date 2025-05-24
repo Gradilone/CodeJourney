@@ -27,6 +27,7 @@ public class scrConexaoAPI : MonoBehaviour
     public string apiUrlCadastro = "https://localhost:44386/api/usuarios/cadastro";
     public string apiUrlLogin = "https://localhost:44386/api/usuarios/login";
     public string apiUrlGetUsuario = "https://localhost:44386/api/usuarios/";
+    public string apiUrlAtualizarUsuario = "https://localhost:44386/api/usuarios/atualizar/";
 
     private IEnumerator EnviarPostRequest(string url, string jsonData, Action<string> onSuccess, Action<long, string> onError)
     {
@@ -89,6 +90,71 @@ public class scrConexaoAPI : MonoBehaviour
             else
             {
                 Debug.LogError("Erro ao buscar dados completos: " + request.error + " | Código: " + request.responseCode);
+                onError?.Invoke(request.responseCode, request.error);
+            }
+        }
+    }
+
+    public IEnumerator AtualizarUsuario(int id, CadastroData dadosAtualizados, string token, Action<string> onSuccess = null, Action<long, string> onError = null)
+    {
+        string url = apiUrlAtualizarUsuario + id;
+        string jsonData = JsonUtility.ToJson(dadosAtualizados);
+
+        Debug.Log("Preparando requisição PUT para: " + url);
+        Debug.Log("Dados enviados: " + jsonData);
+
+        using (UnityWebRequest request = new UnityWebRequest(url, "PUT"))
+        {
+            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonData);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+            request.SetRequestHeader("Authorization", "Bearer " + token);
+
+            Debug.Log("Enviando requisição para: " + url);
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Resposta recebida: " + request.downloadHandler.text);
+                onSuccess?.Invoke(request.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogError("Erro na requisição: " + request.error + " | Código: " + request.responseCode);
+                onError?.Invoke(request.responseCode, request.error);
+            }
+        }
+    }
+
+    public IEnumerator DeletarUsuario(int id, string token, Action<string> onSuccess = null, Action<long, string> onError = null)
+    {
+        string url = apiUrlGetUsuario + id;  // ou apiUrlDeletarUsuario se tiver um endpoint específico para DELETE.
+
+        Debug.Log("Preparando requisição DELETE para: " + url);
+
+        using (UnityWebRequest request = UnityWebRequest.Delete(url))
+        {
+            request.SetRequestHeader("Authorization", "Bearer " + token);
+
+            yield return request.SendWebRequest();
+
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                if (request.downloadHandler != null && !string.IsNullOrEmpty(request.downloadHandler.text))
+                {
+                    Debug.Log("Usuário deletado com sucesso: " + request.downloadHandler.text);
+                    onSuccess?.Invoke(request.downloadHandler.text);
+                }
+                else
+                {
+                    Debug.Log("Usuário deletado com sucesso, sem resposta de conteúdo.");
+                    onSuccess?.Invoke("Usuário deletado com sucesso.");
+                }
+            }
+            else
+            {
+                Debug.LogError("Erro na requisição: " + request.error + " | Código: " + request.responseCode);
                 onError?.Invoke(request.responseCode, request.error);
             }
         }

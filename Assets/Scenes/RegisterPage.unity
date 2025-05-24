@@ -997,11 +997,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1271312119}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 287.407, y: 367}
+  m_AnchoredPosition: {x: 287.407, y: 367.06512}
   m_SizeDelta: {x: 316.454, y: 74.382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &185345090
@@ -2256,6 +2256,13 @@ RectTransform:
   - {fileID: 545178517}
   - {fileID: 1023899018}
   - {fileID: 956544133}
+  - {fileID: 704875770}
+  - {fileID: 1665487593}
+  - {fileID: 495644338}
+  - {fileID: 1385051842}
+  - {fileID: 1516400053}
+  - {fileID: 174679144}
+  - {fileID: 1066072413}
   m_Father: {fileID: 1020016044}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -2332,11 +2339,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1796167494}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 287.407, y: 654}
+  m_AnchoredPosition: {x: 287.407, y: 654.0651}
   m_SizeDelta: {x: 316.454, y: 74.382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &495644339
@@ -3103,11 +3110,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2030487977}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 287.407, y: 846.7737}
+  m_AnchoredPosition: {x: 287.407, y: 846.8388}
   m_SizeDelta: {x: 316.454, y: 74.382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &704875771
@@ -4198,13 +4205,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 480973833}
-  - {fileID: 704875770}
-  - {fileID: 1665487593}
-  - {fileID: 495644338}
-  - {fileID: 1385051842}
-  - {fileID: 1516400053}
-  - {fileID: 174679144}
-  - {fileID: 1066072413}
   - {fileID: 1435944196}
   - {fileID: 768883888}
   - {fileID: 186003178}
@@ -4475,11 +4475,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 187828753}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 6, y: 89.48743}
+  m_AnchoredPosition: {x: 6, y: 89.55255}
   m_SizeDelta: {x: 361.781, y: 93.8102}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1066072414
@@ -6036,11 +6036,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 522566373}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 287.407, y: 581.8}
+  m_AnchoredPosition: {x: 287.407, y: 581.8651}
   m_SizeDelta: {x: 316.454, y: 74.382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1385051843
@@ -6396,11 +6396,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 349761829}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 287.407, y: 450.47}
+  m_AnchoredPosition: {x: 287.407, y: 450.53513}
   m_SizeDelta: {x: 316.454, y: 74.382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1516400054
@@ -6699,11 +6699,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 713317390}
-  m_Father: {fileID: 1020016044}
+  m_Father: {fileID: 480973833}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 287.407, y: 744}
+  m_AnchoredPosition: {x: 287.407, y: 744.0651}
   m_SizeDelta: {x: 316.454, y: 74.382}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1665487594
@@ -8419,6 +8419,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   apiUrlCadastro: https://localhost:44386/api/usuarios/cadastro
   apiUrlLogin: https://suaapi.com/endpoint/login
+  apiUrlGetUsuario: https://localhost:44386/api/usuarios/
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
