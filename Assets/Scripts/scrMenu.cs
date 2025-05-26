@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class scrMenu : MonoBehaviour
 {
@@ -13,10 +14,16 @@ public class scrMenu : MonoBehaviour
     public TextMeshProUGUI txtExpAtual;
     public TextMeshProUGUI txtNivelAtual;
 
+    public int ultimaFaseConquistada;
+    public Transform fasesPai;
+    public RectTransform indicadorFase;
+
     void Start()
     {
         AtualizarEstrelasAutomaticamente();
         AtualizarExperienciaUI();
+        GerenciarBotoesDeFase();
+        AtualizarIndicadorDeFase();
     }
 
     void AtualizarEstrelasAutomaticamente()
@@ -45,12 +52,54 @@ public class scrMenu : MonoBehaviour
 
     public void AtualizarExperienciaUI()
     {
-        int progresso = scrGerenciaFase.instance.progresso;
+        float progresso = scrGerenciaFase.instance.progresso;
         int nivel = scrGerenciaFase.instance.nivelJogador;
 
         txtExpAtual.text = $"{progresso}/100% EXP";
         txtNivelAtual.text = $"Nível {nivel}";
 
+    }
+
+    void GerenciarBotoesDeFase()
+    {
+        ultimaFaseConquistada = scrGerenciaFase.instance.ultimaFaseConquistada;
+
+        int index = 1;
+
+        foreach (Transform botaoFase in fasesPai)
+        {
+            Button botao = botaoFase.GetComponent<Button>();
+            if (botao != null)
+            {
+                botao.interactable = index <= ultimaFaseConquistada;
+            }
+            index++;
+        }
+    }
+
+    void AtualizarIndicadorDeFase()
+    {
+        if (indicadorFase == null)
+        {
+            Debug.LogWarning("Indicador de Fase não atribuído!");
+            return;
+        }
+
+        // Garantir que tenha pelo menos a quantidade de fases necessária
+        if (ultimaFaseConquistada <= 0 || ultimaFaseConquistada > fasesPai.childCount)
+        {
+            Debug.LogWarning("Última fase conquistada fora do intervalo!");
+            indicadorFase.gameObject.SetActive(false);
+            return;
+        }
+
+        Transform botaoUltimaFase = fasesPai.GetChild(ultimaFaseConquistada - 1);
+
+        // Posição ao lado do botão
+        Vector3 novaPosicao = botaoUltimaFase.position + new Vector3(30f, 0f, 0f); // ajuste o offset conforme necessário
+        indicadorFase.position = novaPosicao;
+
+        indicadorFase.gameObject.SetActive(true);
     }
 
 }

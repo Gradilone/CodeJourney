@@ -9,6 +9,8 @@ TagManager:
   - Exibir
   - Declarar
   - Fim
+  - fase
+  - C#
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - Water
   - UI
   - botao
-  - 
+  - foguete
   - 
   - 
   - 

@@ -23,7 +23,7 @@ public class scrPainelDeslisante : MonoBehaviour
     void Update()
     {
         Vector2 alvo = aberto ? posicaoAberto : posicaoFechado;
-        painel.anchoredPosition = Vector2.Lerp(painel.anchoredPosition, alvo, Time.deltaTime * 3f);
+        painel.anchoredPosition = Vector2.Lerp(painel.anchoredPosition, alvo, Time.deltaTime * 2f);
 
         if (autoFechar && aberto)
         {

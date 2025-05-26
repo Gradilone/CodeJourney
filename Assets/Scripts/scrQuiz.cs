@@ -110,7 +110,7 @@ public class scrQuiz : MonoBehaviour
 
     IEnumerator ExecutarDepoisDeDoisSegundos()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         Invoke("CarregarProximaCena", 1.5f);
 
         painelTransicao.aberto = true;

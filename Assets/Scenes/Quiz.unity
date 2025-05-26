@@ -1811,6 +1811,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   errosDaFase: 0
   estrelasDaFase: 0
+  nomeFaseAtual: Fase1
+  nivelJogador: 1
+  progresso: 0
+  progressoAdicionado: 0
 --- !u!4 &1035429506
 Transform:
   m_ObjectHideFlags: 0

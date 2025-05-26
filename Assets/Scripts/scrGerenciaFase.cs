@@ -1,24 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using static scrConexaoAPI;
 
 public class scrGerenciaFase : MonoBehaviour
 {
     public static scrGerenciaFase instance;
 
+    public string jornadaAtual = "C#"; // Nome da jornada atual, pode ser alterado conforme necessário
+
     public int errosDaFase = 0;          
-    public int estrelasDaFase = 0;       
-    public string nomeFaseAtual = "Fase1"; 
+    public int estrelasDaFase = 0;
+    public string nomeFaseAtual = "Fase1";
+
+    public int ultimaFaseConquistada;
 
     public Dictionary<string, int> estrelasPorFase = new Dictionary<string, int>();
 
     public int nivelJogador = 1;
-    public int progresso = 0;
+    public float progresso = 0;
 
     public int progressoAdicionado;
 
+    public scrAutenticador autenticador;
+    public scrConexaoAPI apiConexao;
+
+    public static class JsonHelper
+    {
+        public static T[] FromJson<T>(string json)
+        {
+            string newJson = "{\"Items\":" + json + "}";
+            Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
+            return wrapper.Items;
+        }
+
+        [System.Serializable]
+        private class Wrapper<T>
+        {
+            public T[] Items;
+        }
+    }
+
     private void Awake()
     {
+        GameObject objAutenticador = GameObject.Find("Autenticador");
+        autenticador = objAutenticador.GetComponent<scrAutenticador>();
+
+        
         // Garantir que só existe um GameManager
         if (instance == null)
         {
@@ -29,7 +59,84 @@ public class scrGerenciaFase : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        StartCoroutine(CarregarNivelEProgressoDoServidor());
+    
+
     }
+
+    private IEnumerator CarregarNivelEProgressoDoServidor()
+    {
+        int userId = autenticador.usuarioId;
+        string token = autenticador.bearerToken;
+
+        Debug.Log($"Carregando dados do servidor para o usuário {userId}...");
+
+        yield return apiConexao.GetNivelEProgresso(userId, token,
+            onSuccess: (dados) =>
+            { 
+                nivelJogador = dados.nivel;
+                progresso = dados.progresso;
+
+                if (nivelJogador == 0)
+                {
+                    nivelJogador = 1;
+                }
+
+                Debug.Log($"Dados carregados: Nível {nivelJogador}, Progresso {progresso}");
+            },
+            onError: (code, err) =>
+            {
+                Debug.LogError($"Erro ao carregar dados de nível e progresso: {err} (Código {code})");
+
+            });
+    }
+
+    private IEnumerator CarregarDadosDaJornadaCoroutine()
+    {
+        int usuarioId = autenticador.usuarioId;
+        string jornNome = jornadaAtual;
+
+        Debug.Log($"Iniciando busca da jornada para o usuário {usuarioId}, Jornada: {jornNome}");
+
+        yield return apiConexao.BuscarJornada(usuarioId, jornNome, autenticador.bearerToken,
+            onSuccess: (jsonRetornado) =>
+            {
+                Debug.Log("JSON recebido da API: " + jsonRetornado);
+
+                JornadaData[] dadosRecebidos = JsonHelper.FromJson<JornadaData>(jsonRetornado);
+
+                estrelasPorFase.Clear();
+
+                foreach (var dado in dadosRecebidos)
+                {
+                    string fase = dado.jornFase;
+                    int estrelas = dado.jornEstrelas;
+
+                    estrelasPorFase[fase] = estrelas;
+
+                    Debug.Log($"Atualizado: Fase {fase} -> {estrelas} estrelas.");
+                }
+
+                if (dadosRecebidos.Length > 0)
+                {
+                    int ultimoIndex = dadosRecebidos.Length - 1;
+                    ultimaFaseConquistada = scrGerenciaFase.instance.ultimaFaseConquistada;
+                    ultimaFaseConquistada = dadosRecebidos[ultimoIndex].jornUltimaFase;
+
+                    Debug.Log($"jornUltimaFase atualizado para: {dadosRecebidos[ultimoIndex].jornUltimaFase}");
+                }
+
+                Debug.Log("Dados da Jornada carregados com sucesso.");
+            },
+            onError: (code, err) =>
+            {
+                Debug.LogError($"Erro ao carregar dados da jornada: {err} (Código {code})");
+            }
+        );
+    }
+
+
 
     public void DefinirFase(string nomeFase)
     {
@@ -87,7 +194,7 @@ public class scrGerenciaFase : MonoBehaviour
 
         progresso += progressoAdicionado;
 
-        while (progresso >= 100)
+        if (progresso > 99)
         {
             progresso -= 100;
             nivelJogador++;
@@ -112,5 +219,23 @@ public class scrGerenciaFase : MonoBehaviour
             return Random.Range(71, 99);     // 81 a 100
         else
             return 1;
+    }
+
+    public void JornadaEscolhida()
+    {
+        GameObject botaoClicado = EventSystem.current.currentSelectedGameObject;
+
+        if (botaoClicado != null)
+        {
+            string tagBotao = botaoClicado.tag;
+            jornadaAtual = tagBotao;
+            Debug.Log("Jornada escolhida: " + jornadaAtual);
+
+            StartCoroutine(CarregarDadosDaJornadaCoroutine());
+        }
+        else
+        {
+            Debug.LogWarning("Nenhum botão foi clicado.");
+        }
     }
 }

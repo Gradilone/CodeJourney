@@ -1,8 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.UI;
+using static scrConexaoAPI;
 
 public class scrValidadorCodigo : MonoBehaviour
 {
@@ -42,8 +46,18 @@ public class scrValidadorCodigo : MonoBehaviour
 
     public Slider sliderProgresso;
 
+    public scrConexaoAPI apiConexao;
+    public scrAutenticador autenticador;
+
     void Start()
     {
+        apiConexao = FindObjectOfType<scrConexaoAPI>();
+
+        GameObject objAutenticador = GameObject.Find("Autenticador");
+        autenticador = objAutenticador.GetComponent<scrAutenticador>();
+
+
+
         foreach (var input in lacunas)
         {
             coresOriginais.Add(input.image.color);
@@ -114,15 +128,45 @@ public class scrValidadorCodigo : MonoBehaviour
             scrGerenciaFase.instance.CalcularEstrelas();
             int estrelas = scrGerenciaFase.instance.estrelasDaFase;
 
-            // Agora você pode usar esse valor para mostrar a pontuação ou salvar
             Debug.Log("Estrelas recebidas: " + estrelas);
+
+            
             SubirPainel();
+
+            SalvarDados(estrelas);
         }
         else
         {
             scrGerenciaFase.instance.errosDaFase++;
         }
 
+
+    }
+
+    public void SalvarDados(int estrelas, Action<string> onSuccess = null, Action<long, string> onError = null)
+    {
+        JornadaData dadosAtualizados = new JornadaData
+        {
+            usuarioId = autenticador.usuarioId,
+            jornNome = scrGerenciaFase.instance.jornadaAtual,
+            jornFase = scrGerenciaFase.instance.nomeFaseAtual,
+            jornEstrelas = estrelas,
+            jornUltimaFase = scrGerenciaFase.instance.ultimaFaseConquistada
+        };
+
+
+        StartCoroutine(apiConexao.InserirJornada(dadosAtualizados, autenticador.bearerToken,
+            onSuccess: (resposta) =>
+            {
+                Debug.Log("Jornada enviada com sucesso: " + resposta);
+                onSuccess?.Invoke(resposta);
+            },
+            onError: (codigo, erro) =>
+            {
+                Debug.LogError($"Erro ao enviar jornada: Código {codigo}, Erro: {erro}");
+                onError?.Invoke(codigo, erro);
+            }
+        ));
 
     }
 
@@ -226,15 +270,21 @@ public class scrValidadorCodigo : MonoBehaviour
         if (estrelas >= 3)
             imgEstrelaAcesa3.SetActive(true);
     }
-
     public void AtualizarProgresso()
     {
-        progressoAntes = scrGerenciaFase.instance.progresso;
+        float progressoAntes = scrGerenciaFase.instance.progresso;
 
         scrGerenciaFase.instance.AdicionarProgresso();
 
-        int progressoGanho = scrGerenciaFase.instance.progressoAdicionado;
-        int progressoAtual = scrGerenciaFase.instance.progresso;
+        int ultimaFase = scrGerenciaFase.instance.ultimaFaseConquistada += 1;
+        Debug.Log("Ultima fase conquistada atualizada para: " + scrGerenciaFase.instance.ultimaFaseConquistada);
+
+        int userId = autenticador.usuarioId;
+        string token = autenticador.bearerToken;
+
+        float progressoGanho = scrGerenciaFase.instance.progressoAdicionado;
+        float progressoAtual = scrGerenciaFase.instance.progresso;
+        int nivel = scrGerenciaFase.instance.nivelJogador;
 
         txtProgressoAdicionado.text = $"+{progressoGanho} EXP";
         sliderProgresso.value = progressoAtual;
@@ -242,7 +292,6 @@ public class scrValidadorCodigo : MonoBehaviour
         // Se o progresso anterior somado ao ganho ultrapassar 100, sobe de nível
         if (progressoAntes + progressoGanho >= 100)
         {
-            scrGerenciaFase.instance.nivelJogador++;
             txtNivel.text = "Nível " + scrGerenciaFase.instance.nivelJogador;
             txtNovoNivel.SetActive(true);
         }
@@ -251,5 +300,36 @@ public class scrValidadorCodigo : MonoBehaviour
             txtNivel.text = "Nível " + scrGerenciaFase.instance.nivelJogador;
             txtNovoNivel.SetActive(false);
         }
+
+        ProgressoData dadosParaAtualizar = new ProgressoData
+        {
+            nivel = nivel,
+            progresso = progressoAtual
+        };
+
+        JornadaData dados = new JornadaData
+        {
+            jornUltimaFase = ultimaFase
+        };
+
+        StartCoroutine(apiConexao.UpdateNivelEProgresso(userId, dadosParaAtualizar, token,
+       onSuccess: (res) => {
+           Debug.Log("Progresso sincronizado com servidor com sucesso.");
+       },
+       onError: (code, err) => {
+           Debug.LogError($"Falha ao sincronizar progresso: {err} (Código {code})");
+       }));
+
+        StartCoroutine(apiConexao.AtualizarJornada(userId, dados, token,
+            onSuccess: (res) =>
+            {
+                Debug.Log("Jornada atualizada com sucesso: " + res);
+            },
+            onError: (code, err) =>
+            {
+                Debug.LogError($"Erro ao atualizar jornada: {err} (Código {code})");
+            }
+        ));
+
     }
 }
