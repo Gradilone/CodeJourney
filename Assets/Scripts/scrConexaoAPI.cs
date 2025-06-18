@@ -41,15 +41,15 @@ public class scrConexaoAPI : MonoBehaviour
     }
 
     [Header("Configuração da API")]
-    public string apiUrl = "https://localhost:44386/";
-    public string apiUrlCadastro => $"{apiUrl}api/usuarios/cadastro";
-    public string apiUrlLogin => $"{apiUrl}api/usuarios/login";
-    public string apiUrlGetUsuario => $"{apiUrl}api/usuarios/";
-    public string apiUrlAtualizarUsuario => $"{apiUrl}api/usuarios/atualizar/";
-    public string apiNivelProgresso => $"{apiUrl}api/usuarios/";
-    public string apiInserirFase => $"{apiUrl}api/jornada/inserir";
-    public string apiGetJornada => $"{apiUrl}api/jornada/pegar";
-    public string apiAtualizarJornada => $"{apiUrl}api/jornada/atualizar/";
+    public string urlApi = "https://apicodejourney.azurewebsites.net/";
+    public string apiUrlCadastro => $"{urlApi}api/usuarios/cadastro";
+    public string apiUrlLogin => $"{urlApi}api/usuarios/login";
+    public string apiUrlGetUsuario => $"{urlApi}api/usuarios/";
+    public string apiUrlAtualizarUsuario => $"{urlApi}api/usuarios/atualizar/";
+    public string apiNivelProgresso => $"{urlApi}api/usuarios/";
+    public string apiInserirFase => $"{urlApi}api/jornada/inserir";
+    public string apiGetJornada => $"{urlApi}api/jornada/pegar";
+    public string apiAtualizarJornada => $"{urlApi}api/jornada/atualizar/";
 
     private IEnumerator EnviarPostRequest(string url, string jsonData, Action<string> onSuccess, Action<long, string> onError)
     {
@@ -83,12 +83,14 @@ public class scrConexaoAPI : MonoBehaviour
     public IEnumerator EnviarLogin(LoginData dados, Action<string> onSuccess = null, Action<long, string> onError = null)
     {
         string jsonData = JsonUtility.ToJson(dados);
+        Debug.Log("url: " + apiUrlLogin);
         yield return EnviarPostRequest(apiUrlLogin, jsonData, onSuccess, onError);
     }
 
     public IEnumerator EnviarCadastro(CadastroData dados, Action<string> onSuccess = null, Action<long, string> onError = null)
     {
         string jsonData = JsonUtility.ToJson(dados);
+        Debug.Log("url: " + apiUrlCadastro);
         yield return EnviarPostRequest(apiUrlCadastro, jsonData, onSuccess, onError);
     }
 
@@ -274,7 +276,7 @@ public class scrConexaoAPI : MonoBehaviour
 
     public IEnumerator BuscarJornada(int usuarioId, string jornNome, string token, Action<string> onSuccess = null, Action<long, string> onError = null)
     {
-        string url = apiGetJornada + "?usuarioId=" + UnityWebRequest.EscapeURL(usuarioId.ToString()) + "&jornNome=" + UnityWebRequest.EscapeURL(jornNome);
+        string url = apiGetJornada + "?idUsuario=" + UnityWebRequest.EscapeURL(usuarioId.ToString()) + "&jornNome=" + UnityWebRequest.EscapeURL(jornNome);
 
         Debug.Log("Preparando requisição GET para: " + url);
 
@@ -301,7 +303,9 @@ public class scrConexaoAPI : MonoBehaviour
     public IEnumerator AtualizarJornada(int usuarioId, JornadaData dadosAtualizados, string token, Action<string> onSuccess = null, Action<long, string> onError = null)
     {
         string url = apiAtualizarJornada + usuarioId;
+        Debug.Log("Preparando requisição PUT para: " + url);
         string jsonData = JsonUtility.ToJson(dadosAtualizados);
+        Debug.Log("Dados enviados: " + jsonData);
 
         using (UnityWebRequest request = new UnityWebRequest(url, "PUT"))
         {

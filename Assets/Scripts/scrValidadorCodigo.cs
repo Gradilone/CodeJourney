@@ -49,6 +49,8 @@ public class scrValidadorCodigo : MonoBehaviour
     public scrConexaoAPI apiConexao;
     public scrAutenticador autenticador;
 
+    public bool estaConcluida = false;
+
     void Start()
     {
         apiConexao = FindObjectOfType<scrConexaoAPI>();
@@ -154,6 +156,7 @@ public class scrValidadorCodigo : MonoBehaviour
             jornUltimaFase = scrGerenciaFase.instance.ultimaFaseConquistada
         };
 
+        Debug.Log($"Enviando dados da jornada: {dadosAtualizados.usuarioId}");
 
         StartCoroutine(apiConexao.InserirJornada(dadosAtualizados, autenticador.bearerToken,
             onSuccess: (resposta) =>
@@ -233,8 +236,8 @@ public class scrValidadorCodigo : MonoBehaviour
 
     public void SubirPainel()
     {
-        AtualizarEstrelasUI();
         AtualizarProgresso();
+        AtualizarEstrelasUI(); 
         StartCoroutine(AnimarPainel());
     }
 
@@ -272,12 +275,28 @@ public class scrValidadorCodigo : MonoBehaviour
     }
     public void AtualizarProgresso()
     {
+        int ultimaFase = scrGerenciaFase.instance.ultimaFaseConquistada;
+
+        string nomeFase = scrGerenciaFase.instance.nomeFaseAtual;
+        int numeroFaseAtual = int.Parse(System.Text.RegularExpressions.Regex.Match(nomeFase, @"\d+").Value);
+
+        // Verifica se a fase atual é diferente da última fase conquistada
+        if (numeroFaseAtual == scrGerenciaFase.instance.ultimaFaseConquistada)
+        {
+            scrGerenciaFase.instance.ultimaFaseConquistada = numeroFaseAtual + 1;
+            Debug.Log("Ultima fase conquistada atualizada para: " + scrGerenciaFase.instance.ultimaFaseConquistada);
+        }
+        else
+        {
+            Debug.Log("Fase já conquistada. Nenhuma atualização.");
+        }
+
+
         float progressoAntes = scrGerenciaFase.instance.progresso;
 
         scrGerenciaFase.instance.AdicionarProgresso();
 
-        int ultimaFase = scrGerenciaFase.instance.ultimaFaseConquistada += 1;
-        Debug.Log("Ultima fase conquistada atualizada para: " + scrGerenciaFase.instance.ultimaFaseConquistada);
+
 
         int userId = autenticador.usuarioId;
         string token = autenticador.bearerToken;

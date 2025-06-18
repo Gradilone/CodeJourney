@@ -9,7 +9,7 @@ public class scrGerenciaFase : MonoBehaviour
 {
     public static scrGerenciaFase instance;
 
-    public string jornadaAtual = "C#"; // Nome da jornada atual, pode ser alterado conforme necessário
+    public string jornadaAtual; // Nome da jornada atual, pode ser alterado conforme necessário
 
     public int errosDaFase = 0;          
     public int estrelasDaFase = 0;

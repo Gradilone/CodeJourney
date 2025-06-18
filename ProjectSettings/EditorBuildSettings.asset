@@ -32,4 +32,19 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Codigo.unity
     guid: 385cbe0c683d5224db83cd6c958a6ffe
+  - enabled: 1
+    path: Assets/Scenes/NiveisPython.unity
+    guid: 05ae4629688f29b4ba1775b230eb5fed
+  - enabled: 1
+    path: Assets/Scenes/NiveisJavascript.unity
+    guid: 0f01405a70b9aa64cb107aed8d7be51d
+  - enabled: 1
+    path: Assets/Scenes/QuizNv2.unity
+    guid: 772f0426b6312ee43901559f3ab6bac4
+  - enabled: 1
+    path: Assets/Scenes/Nv2Fluxo.unity
+    guid: 0469e14bdd3261046a9afcc8d8df80fc
+  - enabled: 1
+    path: Assets/Scenes/Nv2Codigo.unity
+    guid: a59f0a5740cf1824faa6430fa91fa84b
   m_configObjects: {}
