@@ -6247,7 +6247,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1433916002}
-  - component: {fileID: 1433916003}
   m_Layer: 0
   m_Name: Fases
   m_TagString: Untagged
@@ -6285,30 +6284,6 @@ Transform:
   - {fileID: 1544744267}
   m_Father: {fileID: 1670302261}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1433916003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1433916001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cfb2869d08891374e8f815f6db44023e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  botaoFase: {fileID: 0}
-  imgContainer: {fileID: 0}
-  estrela1: {fileID: 0}
-  estrela2: {fileID: 0}
-  estrela3: {fileID: 0}
-  nomeFase: 
-  estrelas: 0
-  txtExpAtual: {fileID: 1684163930}
-  txtNivelAtual: {fileID: 758282312}
-  ultimaFaseConquistada: 0
-  fasesPai: {fileID: 1433916002}
-  indicadorFase: {fileID: 419510212}
 --- !u!1 &1452447065
 GameObject:
   m_ObjectHideFlags: 0

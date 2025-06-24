@@ -2775,6 +2775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneIndex: 1
+  deelay: 0
 --- !u!4 &591515631
 Transform:
   m_ObjectHideFlags: 0
@@ -8388,7 +8389,7 @@ MonoBehaviour:
   tooltipSenha: {fileID: 1516400052}
   tooltipConfirmaSenha: {fileID: 174679141}
   tooltipConfirmacao: {fileID: 1066072412}
-  sceneIndex: 1
+  sceneIndex: 0
   conexaoAPI: {fileID: 0}
 --- !u!4 &2136542453
 Transform:
@@ -8417,9 +8418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7b99dae57914f4db32f4394527bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrlCadastro: https://localhost:44386/api/usuarios/cadastro
-  apiUrlLogin: https://suaapi.com/endpoint/login
-  apiUrlGetUsuario: https://localhost:44386/api/usuarios/
+  urlApi: https://apicodejourney.azurewebsites.net/
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

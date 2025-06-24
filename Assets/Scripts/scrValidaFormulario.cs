@@ -56,6 +56,11 @@ public class scrValidaFormulario : MonoBehaviour
     void Update()
     {
         NavegarComTab();
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            ValidarFormulario();
+        }
     }
 
     void NavegarComTab()

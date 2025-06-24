@@ -337,6 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneIndex: 4
+  deelay: 0
 --- !u!4 &109747190
 Transform:
   m_ObjectHideFlags: 0
@@ -2206,6 +2207,12 @@ MonoBehaviour:
   sliderProgresso: {fileID: 300176427}
   apiConexao: {fileID: 877192960}
   autenticador: {fileID: 0}
+  estaConcluida: 0
+  tabOrder:
+  - {fileID: 200845449}
+  - {fileID: 1600945757}
+  - {fileID: 1399201933}
+  - {fileID: 2115119099}
 --- !u!4 &877192959
 Transform:
   m_ObjectHideFlags: 0
@@ -2233,7 +2240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7b99dae57914f4db32f4394527bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrl: https://localhost:44386/
+  urlApi: https://apicodejourney.azurewebsites.net/
 --- !u!1 &896376177
 GameObject:
   m_ObjectHideFlags: 0

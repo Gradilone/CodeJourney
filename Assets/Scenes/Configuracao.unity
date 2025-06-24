@@ -1426,10 +1426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7b99dae57914f4db32f4394527bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrlCadastro: https://localhost:44386/api/usuarios/cadastro
-  apiUrlLogin: https://localhost:44386/api/usuarios/login
-  apiUrlGetUsuario: https://localhost:44386/api/usuarios/
-  apiUrlAtualizarUsuario: https://localhost:44386/api/usuarios/atualizar/
+  urlApi: https://apicodejourney.azurewebsites.net/
 --- !u!1 &324128818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1594,6 +1591,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneIndex: 1
+  deelay: 0
 --- !u!4 &328698362
 Transform:
   m_ObjectHideFlags: 0
@@ -2808,6 +2806,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneIndex: 4
+  deelay: 0
 --- !u!1 &774716797
 GameObject:
   m_ObjectHideFlags: 0

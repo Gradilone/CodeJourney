@@ -2522,7 +2522,7 @@ MonoBehaviour:
   - pergunta: "O que significa o modificador static em um m\xE9todo em C#?"
     Answers:
     - "O m\xE9todo pode ser sobrescrito por outras classes"
-    - "O m\xE9todo s\xF3 pode ser chamado dentro da classe onde foi declarad"
+    - "O m\xE9todo s\xF3 pode ser chamado dentro da classe onde foi declarado"
     - "O m\xE9todo pertence \xE0 inst\xE2ncia da classe"
     - "O m\xE9todo pertence \xE0 pr\xF3pria classe, e n\xE3o \xE0 inst\xE2ncia dela"
     Correct: 4

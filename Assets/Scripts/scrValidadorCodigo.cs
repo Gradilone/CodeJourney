@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime;
-using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static scrConexaoAPI;
 
@@ -51,6 +51,8 @@ public class scrValidadorCodigo : MonoBehaviour
 
     public bool estaConcluida = false;
 
+    public List<Selectable> tabOrder;
+
     void Start()
     {
         apiConexao = FindObjectOfType<scrConexaoAPI>();
@@ -59,13 +61,42 @@ public class scrValidadorCodigo : MonoBehaviour
         autenticador = objAutenticador.GetComponent<scrAutenticador>();
 
 
-
         foreach (var input in lacunas)
         {
             coresOriginais.Add(input.image.color);
             TMP_InputField captured = input;
             captured.onSelect.AddListener(delegate { LimparFeedback(captured); });
 
+
+        };
+
+
+    }
+
+    private void Update()
+    {
+        NavegarComTab();
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            VerificarRespostas();
+        }
+
+    }
+
+    void NavegarComTab()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            GameObject current = EventSystem.current.currentSelectedGameObject;
+            if (current != null)
+            {
+                int index = tabOrder.IndexOf(current.GetComponent<Selectable>());
+                if (index != -1)
+                {
+                    int nextIndex = (index + 1) % tabOrder.Count;
+                    EventSystem.current.SetSelectedGameObject(tabOrder[nextIndex].gameObject);
+                }
+            }
         }
     }
 

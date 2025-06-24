@@ -273,7 +273,7 @@ public class scrValidaConfig : MonoBehaviour
     private IEnumerator VoltarParaIndex()
     {
         yield return new WaitForSeconds(1.5f);
-        SceneManager.LoadScene(1); // Carrega a cena de índice 1
+        SceneManager.LoadScene(0); // Carrega a cena de índice 0
     }
 
 }

@@ -144,7 +144,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &167306462
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2337,7 +2337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d7b99dae57914f4db32f4394527bff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  apiUrl: https://localhost:44386/
+  urlApi: https://apicodejourney.azurewebsites.net/
 --- !u!114 &1436695901
 MonoBehaviour:
   m_ObjectHideFlags: 0
